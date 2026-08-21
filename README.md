@@ -172,7 +172,7 @@ A aplicação estará em `http://localhost:3000`; `GET /health` verifica a dispo
 
 No Azure Web App:
 
-- use um plano Basic B1 ou superior e o runtime Node.js 22 ou mais recente;
+- use o runtime Node.js 22 ou mais recente; o F1 atende ao MVP com cold start, enquanto B1+ é recomendado para operação previsível;
 - use `npm start` como comando de inicialização;
 - habilite HTTPS Only, TLS 1.2+ no site e no SCM e WebSockets;
 - configure `PUBLIC_ORIGIN=https://<host-público-exato>`;

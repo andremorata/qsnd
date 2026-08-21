@@ -78,8 +78,8 @@ Azure, proxy, WAF e ferramentas de observabilidade ainda podem produzir metadado
 
 ## Configuração obrigatória no Azure Web App
 
-- Plano Basic B1 ou superior; Free/Shared somente para desenvolvimento e testes.
 - Uma única instância e sem autoscale.
+- Basic B1 ou superior é recomendado. O F1 foi aceito para este MVP de baixo risco, assumindo cold start, recursos compartilhados e ausência de garantia operacional de produção.
 - **HTTPS Only** habilitado.
 - TLS mínimo 1.2 ou superior no site e no SCM/Kudu.
 - `PUBLIC_ORIGIN=https://<host-público-exato>` configurado.
