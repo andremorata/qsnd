@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2eee4">
+  <meta name="description" content="Troque textos e arquivos em uma sala temporária.">
+  <title>QSND — passagem temporária</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Ir para o conteúdo</a>
+  <div class="page-noise" aria-hidden="true"></div>
+
+  <main id="main-content">
+    <section id="landing-view" class="landing-view">
+      <header class="brand-bar">
+        <a class="brand" href="/" aria-label="QSND, início">Q<span>SND</span><i></i></a>
+        <span id="connection-label" class="connection-label">passagem temporária</span>
+      </header>
+
+      <div class="landing-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">SEM CONTA · SEM HISTÓRICO</p>
+          <h1>Passe daqui<br>pra lá. <em>Depois,</em><br>nada fica.</h1>
+          <p class="hero-description">Uma sala curta para textos em Markdown e arquivos. O dono saiu, o tempo acabou: tudo desaparece.</p>
+          <div class="promise-row" aria-label="Características">
+            <span><b>30</b> min sem atividade</span>
+            <span><b>100</b> MB por sala</span>
+            <span><b>0</b> histórico</span>
+          </div>
+        </div>
+
+        <div class="access-card">
+          <div class="card-index" aria-hidden="true">01 / ENTRADA</div>
+          <label class="field-label" for="display-name">Como devemos chamar você?</label>
+          <input id="display-name" class="line-input" name="name" maxlength="24" autocomplete="name" placeholder="Seu nome" required>
+
+          <div class="access-actions">
+            <form id="create-form" class="access-option">
+              <span class="option-number">A</span>
+              <div>
+                <h2>Abrir uma sala</h2>
+                <p>Você será o dono e decide quando fechar.</p>
+                <label class="sr-only" for="room-label">Nome opcional da sala</label>
+                <input id="room-label" class="compact-input" maxlength="40" placeholder="Nome da sala (opcional)">
+                <button class="primary-button" type="submit">Criar passagem <span aria-hidden="true">↗</span></button>
+              </div>
+            </form>
+
+            <div class="or-rule"><span>ou</span></div>
+
+            <form id="join-form" class="access-option">
+              <span class="option-number">B</span>
+              <div>
+                <h2>Entrar com código</h2>
+                <p>Peça as cinco letras para quem criou.</p>
+                <label class="sr-only" for="room-code">Código da sala</label>
+                <input id="room-code" class="code-input" maxlength="5" pattern="[A-Za-z]{5}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="QSNDR" required>
+                <button class="secondary-button" type="submit">Entrar na sala <span aria-hidden="true">→</span></button>
+              </div>
+            </form>
+          </div>
+
+          <p class="privacy-note"><span aria-hidden="true">◉</span> O código é a chave. Compartilhe apenas com quem deve entrar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="room-view" class="room-view" hidden>
+      <header class="room-header">
+        <a class="brand compact" href="/" aria-label="Voltar ao início">Q<span>SND</span><i></i></a>
+        <div class="room-identity">
+          <p id="room-kicker">SALA TEMPORÁRIA</p>
+          <h1 id="room-title">Sala sem nome</h1>
+        </div>
+        <button id="copy-code" class="code-ticket" type="button" aria-label="Copiar código da sala">
+          <span>CÓDIGO</span><strong id="room-code-display">—</strong><i aria-hidden="true">copiar</i>
+        </button>
+        <div id="timer" class="timer-pill" aria-live="polite">
+          <span class="pulse"></span><span id="timer-label">30:00</span>
+        </div>
+        <button id="close-room" class="close-button" type="button" hidden>Encerrar</button>
+      </header>
+
+      <div class="room-shell">
+        <section class="feed-panel" aria-labelledby="feed-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">CONTEÚDO DA SALA</p>
+              <h2 id="feed-title">Passagem</h2>
+            </div>
+            <span id="room-status" class="status-tag">ativa</span>
+          </div>
+
+          <div id="feed" class="feed" role="log" aria-live="polite" aria-relevant="additions">
+            <div id="empty-feed" class="empty-feed">
+              <div class="empty-mark" aria-hidden="true">↗</div>
+              <h3>A passagem está livre.</h3>
+              <p>Envie um texto em Markdown ou escolha alguns arquivos.</p>
+            </div>
+          </div>
+
+          <form id="message-form" class="composer">
+            <div class="markdown-tools" aria-label="Formatação Markdown">
+              <span>MARKDOWN</span>
+              <button type="button" data-wrap="**|**" title="Negrito"><b>B</b></button>
+              <button type="button" data-wrap="*|*" title="Itálico"><i>I</i></button>
+              <button type="button" data-wrap="`|`" title="Código">&lt;/&gt;</button>
+              <button type="button" data-wrap="[|](https://)" title="Link">↗ link</button>
+            </div>
+            <label class="sr-only" for="message-input">Mensagem em Markdown</label>
+            <textarea id="message-input" maxlength="8000" rows="3" placeholder="Escreva algo para passar adiante…"></textarea>
+            <div class="composer-footer">
+              <div class="composer-actions">
+                <input id="file-input" type="file" multiple hidden>
+                <button id="file-button" class="attach-button" type="button"><span aria-hidden="true">＋</span> Arquivos</button>
+                <span id="upload-status" class="upload-status" aria-live="polite"></span>
+              </div>
+              <div class="send-group">
+                <span class="shortcut-hint">Enter envia · Shift+Enter quebra</span>
+                <span id="character-count">0 / 8000</span>
+                <button class="send-button" type="submit">Enviar <span aria-hidden="true">↑</span></button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="presence-panel" aria-labelledby="presence-title">
+          <div class="presence-heading">
+            <div>
+              <p class="eyebrow">AGORA</p>
+              <h2 id="presence-title">Na sala</h2>
+            </div>
+            <span id="participant-count" class="participant-count">0</span>
+          </div>
+          <ul id="participant-list" class="participant-list"></ul>
+          <div class="presence-note">
+            <span aria-hidden="true">⌁</span>
+            <p>Avatares e nomes duram somente enquanto esta sala existir.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="ended-overlay" class="ended-overlay" hidden>
+    <div>
+      <p class="eyebrow">PASSAGEM ENCERRADA</p>
+      <h2>Tudo foi apagado.</h2>
+      <p id="ended-reason">A sala não está mais disponível.</p>
+      <button id="back-home" class="primary-button" type="button">Voltar ao início</button>
+    </div>
+  </div>
+</body>
+</html>
