@@ -12,7 +12,7 @@ Revisão do fluxo completo de criação, entrada, mensagens, Markdown, presença
 |---|---:|---|---|---|
 | F-01 | Alta | Código curto permitia enumeração sem limitação e erros revelavam salas existentes. | Uma tentativa por WebSocket, respostas indistinguíveis, limites por endereço e globais. | Mitigado; código curto permanece inadequado para conteúdo altamente sensível. |
 | F-02 | Alta | Salas, disco, conexões e eventos não tinham orçamento global. | Tetos globais e por sala para salas, bytes, uploads, transferências, WebSockets e eventos. | Corrigido. |
-| F-03 | Alta condicional | HTTPS e TLS dependiam apenas da futura configuração do Azure. | HSTS e documentação obrigatória de HTTPS Only, TLS 1.2+ e `PUBLIC_ORIGIN`. | Pendente de verificação depois da implantação. |
+| F-03 | Alta condicional | HTTPS e TLS dependiam apenas da futura configuração do Azure. | HSTS e documentação obrigatória de HTTPS Only, TLS 1.2+ e `PUBLIC_ORIGIN`. | Corrigido e verificado na implantação: redirecionamento HTTPS, rejeição de TLS antigo e origem WebSocket exata. |
 | F-04 | Média | Um convidado desconectado podia usar `resume` acima do limite da sala. | Capacidade revalidada na retomada e limite de sessões retidas. | Corrigido. |
 | F-05 | Média | WebSocket aceitava qualquer `Origin` e sockets anônimos permaneciam abertos. | Origem exata obrigatória e timeout de autenticação de dez segundos. | Corrigido. |
 | F-06 | Média | Upload ou download iniciado podia continuar depois do encerramento. | Streams rastreados e abortados ao desconectar o dono ou destruir a sala. | Corrigido. |
@@ -75,4 +75,4 @@ Os riscos aceitos e as condições operacionais estão detalhados em [`SECURITY.
 
 **Código local: pronto após as correções e o gate automatizado.**
 
-**Operação pública: pronta somente depois de validar o checklist Azure de `SECURITY.md`.** Para tráfego não confiável em escala, adicionar proteção de borda com WAF/rate limiting distribuído. Para dados de alto impacto ou regulados, o modelo de código curto deve ser substituído por identidade forte ou convite de alta entropia e criptografia ponta a ponta.
+**Operação pública: publicada no Azure com HTTPS Only, TLS 1.2+, `PUBLIC_ORIGIN`, WebSockets, logs de diagnóstico e credenciais básicas de publicação verificados.** O risco operacional do plano F1 foi aceito para este MVP. Para tráfego não confiável em escala, adicionar proteção de borda com WAF/rate limiting distribuído. Para dados de alto impacto ou regulados, substituir o código curto por identidade forte ou convite de alta entropia e criptografia ponta a ponta.

@@ -12,7 +12,7 @@ The review covered the full creation, join, message, Markdown, presence, upload,
 |---|---:|---|---|---|
 | F-01 | High | The short code allowed unlimited enumeration and errors revealed existing rooms. | One attempt per WebSocket, indistinguishable responses, and per-address/global limits. | Mitigated; the short code remains unsuitable for highly sensitive content. |
 | F-02 | High | Rooms, disk, connections, and events had no global budget. | Global and per-room caps for rooms, bytes, uploads, transfers, WebSockets, and events. | Fixed. |
-| F-03 | Conditionally high | HTTPS and TLS depended only on future Azure configuration. | HSTS plus required documentation for HTTPS Only, TLS 1.2+, and `PUBLIC_ORIGIN`. | Pending post-deployment verification. |
+| F-03 | Conditionally high | HTTPS and TLS depended only on future Azure configuration. | HSTS plus required documentation for HTTPS Only, TLS 1.2+, and `PUBLIC_ORIGIN`. | Fixed and verified in deployment: HTTPS redirect, old TLS rejection, and exact WebSocket origin. |
 | F-04 | Medium | A disconnected guest could use `resume` above the room limit. | Capacity is checked again on resume, with a retained-session limit. | Fixed. |
 | F-05 | Medium | WebSockets accepted any `Origin`, and anonymous sockets stayed open. | Exact origin required, with a ten-second authentication timeout. | Fixed. |
 | F-06 | Medium | An upload or download could continue after room closure. | Streams are tracked and aborted when the owner disconnects or the room is destroyed. | Fixed. |
@@ -75,4 +75,4 @@ Accepted risks and operating conditions are detailed in [`SECURITY.en-US.md`](SE
 
 **Local code: ready after fixes and the automated gate.**
 
-**Public operation: ready only after the Azure checklist in `SECURITY.en-US.md` is validated.** Add edge WAF/distributed rate limiting for untrusted traffic at scale. Replace the short-code model with strong identity or a high-entropy invitation and end-to-end encryption for high-impact or regulated data.
+**Public operation: deployed to Azure with HTTPS Only, TLS 1.2+, `PUBLIC_ORIGIN`, WebSockets, diagnostic logging, and basic publishing credentials verified.** The F1 plan's operating risk was accepted for this MVP. Add edge WAF/distributed rate limiting for untrusted traffic at scale. Replace the short-code model with strong identity or a high-entropy invitation and end-to-end encryption for high-impact or regulated data.
