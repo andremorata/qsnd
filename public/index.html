@@ -10,118 +10,132 @@
   <script type="module" src="/app.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Ir para o conteúdo</a>
+  <a class="skip-link" href="#main-content" data-i18n="skip">Ir para o conteúdo</a>
   <div class="page-noise" aria-hidden="true"></div>
 
   <main id="main-content">
     <section id="landing-view" class="landing-view">
       <header class="brand-bar">
-        <a class="brand" href="/" aria-label="QSND, início">Q<span>SND</span><i></i></a>
-        <span id="connection-label" class="connection-label">passagem temporária</span>
+        <a class="brand" href="/" aria-label="QSND, início" data-i18n-aria-label="brand.home">Q<span>SND</span><i></i></a>
+        <div class="brand-meta">
+          <span id="connection-label" class="connection-label" data-i18n="tagline">passagem temporária</span>
+          <div class="language-switch" role="group" aria-label="Selecionar idioma" data-i18n-aria-label="language.label">
+            <button type="button" data-language="pt-BR" aria-pressed="false" aria-label="Português do Brasil" data-i18n-aria-label="language.pt">PT</button>
+            <button type="button" data-language="en-US" aria-pressed="false" aria-label="Inglês dos Estados Unidos" data-i18n-aria-label="language.en">EN</button>
+          </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Usar tema escuro" data-i18n-aria-label="theme.useDark"><span aria-hidden="true">☼</span></button>
+        </div>
       </header>
 
       <div class="landing-grid">
         <div class="hero-copy">
-          <p class="eyebrow">SEM CONTA · SEM HISTÓRICO</p>
-          <h1>Passe daqui<br>pra lá. <em>Depois,</em><br>nada fica.</h1>
-          <p class="hero-description">Uma sala curta para textos em Markdown e arquivos. O dono saiu, o tempo acabou: tudo desaparece.</p>
-          <div class="promise-row" aria-label="Características">
-            <span><b>30</b> min sem atividade</span>
-            <span><b>100</b> MB por sala</span>
-            <span><b>0</b> histórico</span>
+          <p class="eyebrow" data-i18n="landing.eyebrow">SEM CONTA · SEM HISTÓRICO</p>
+          <h1><span data-i18n="hero.line1">Passe daqui</span><br><span data-i18n="hero.line2">pra lá.</span> <em data-i18n="hero.then">Depois,</em><br><span data-i18n="hero.line3">nada fica.</span></h1>
+          <p class="hero-description" data-i18n="hero.description">Uma sala curta para textos em Markdown e arquivos. O dono saiu, o tempo acabou: tudo desaparece.</p>
+          <div class="promise-row" aria-label="Características" data-i18n-aria-label="features.label">
+            <span><b>30</b> <span data-i18n="features.idle">min sem atividade</span></span>
+            <span><b>100</b> <span data-i18n="features.storage">MB por sala</span></span>
+            <span><b>0</b> <span data-i18n="features.history">histórico</span></span>
           </div>
         </div>
 
         <div class="access-card">
-          <div class="card-index" aria-hidden="true">01 / ENTRADA</div>
-          <label class="field-label" for="display-name">Como devemos chamar você?</label>
-          <input id="display-name" class="line-input" name="name" maxlength="24" autocomplete="name" placeholder="Seu nome" required>
+          <div class="card-index" aria-hidden="true" data-i18n="entry.index">01 / ENTRADA</div>
+          <label class="field-label" for="display-name" data-i18n="name.label">Como devemos chamar você?</label>
+          <input id="display-name" class="line-input" name="name" maxlength="24" autocomplete="name" placeholder="Seu nome" data-i18n-placeholder="name.placeholder" required>
 
           <div class="access-actions">
             <form id="create-form" class="access-option">
               <span class="option-number">A</span>
               <div>
-                <h2>Abrir uma sala</h2>
-                <p>Você será o dono e decide quando fechar.</p>
-                <label class="sr-only" for="room-label">Nome opcional da sala</label>
-                <input id="room-label" class="compact-input" maxlength="40" placeholder="Nome da sala (opcional)">
-                <button class="primary-button" type="submit">Criar passagem <span aria-hidden="true">↗</span></button>
+                <h2 data-i18n="create.title">Abrir uma sala</h2>
+                <p data-i18n="create.description">Você será o dono e decide quando fechar.</p>
+                <label class="sr-only" for="room-label" data-i18n="create.roomLabel">Nome opcional da sala</label>
+                <input id="room-label" class="compact-input" maxlength="40" placeholder="Nome da sala (opcional)" data-i18n-placeholder="create.roomPlaceholder">
+                <button class="primary-button" type="submit"><span data-i18n="create.button">Criar passagem</span> <span aria-hidden="true">↗</span></button>
               </div>
             </form>
 
-            <div class="or-rule"><span>ou</span></div>
+            <div class="or-rule"><span data-i18n="or">ou</span></div>
 
             <form id="join-form" class="access-option">
               <span class="option-number">B</span>
               <div>
-                <h2>Entrar com código</h2>
-                <p>Peça as cinco letras para quem criou.</p>
-                <label class="sr-only" for="room-code">Código da sala</label>
+                <h2 data-i18n="join.title">Entrar com código</h2>
+                <p data-i18n="join.description">Peça as cinco letras para quem criou.</p>
+                <label class="sr-only" for="room-code" data-i18n="join.codeLabel">Código da sala</label>
                 <input id="room-code" class="code-input" maxlength="5" pattern="[A-Za-z]{5}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="QSNDR" required>
-                <button class="secondary-button" type="submit">Entrar na sala <span aria-hidden="true">→</span></button>
+                <button class="secondary-button" type="submit"><span data-i18n="join.button">Entrar na sala</span> <span aria-hidden="true">→</span></button>
               </div>
             </form>
           </div>
 
-          <p class="privacy-note"><span aria-hidden="true">◉</span> O código é a chave. Compartilhe apenas com quem deve entrar.</p>
+          <p class="privacy-note"><span aria-hidden="true">◉</span> <span data-i18n="privacy">O código é a chave. Compartilhe apenas com quem deve entrar.</span></p>
         </div>
       </div>
     </section>
 
     <section id="room-view" class="room-view" hidden>
       <header class="room-header">
-        <a class="brand compact" href="/" aria-label="Voltar ao início">Q<span>SND</span><i></i></a>
+        <a class="brand compact" href="/" aria-label="Voltar ao início" data-i18n-aria-label="brand.back">Q<span>SND</span><i></i></a>
         <div class="room-identity">
-          <p id="room-kicker">SALA TEMPORÁRIA</p>
-          <h1 id="room-title">Sala sem nome</h1>
+          <p id="room-kicker" data-i18n="room.kickerNamed">SALA TEMPORÁRIA</p>
+          <h1 id="room-title" data-i18n="room.untitledTitle">Sala sem nome</h1>
         </div>
-        <button id="copy-code" class="code-ticket" type="button" aria-label="Copiar código da sala">
-          <span>CÓDIGO</span><strong id="room-code-display">—</strong><i aria-hidden="true">copiar</i>
+        <button id="copy-code" class="code-ticket" type="button" aria-label="Copiar código da sala" data-i18n-aria-label="room.copyAria">
+          <span data-i18n="room.code">CÓDIGO</span><strong id="room-code-display">—</strong><i aria-hidden="true" data-i18n="room.copy">copiar</i>
         </button>
         <div id="timer" class="timer-pill" aria-live="polite">
           <span class="pulse"></span><span id="timer-label">30:00</span>
         </div>
-        <button id="close-room" class="close-button" type="button" hidden>Encerrar</button>
+        <div class="room-preferences">
+          <div class="language-switch" role="group" aria-label="Selecionar idioma" data-i18n-aria-label="language.label">
+            <button type="button" data-language="pt-BR" aria-pressed="false" aria-label="Português do Brasil" data-i18n-aria-label="language.pt">PT</button>
+            <button type="button" data-language="en-US" aria-pressed="false" aria-label="Inglês dos Estados Unidos" data-i18n-aria-label="language.en">EN</button>
+          </div>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Usar tema escuro" data-i18n-aria-label="theme.useDark"><span aria-hidden="true">☼</span></button>
+          <button id="close-room" class="close-button" type="button" hidden data-i18n="room.close">Encerrar</button>
+        </div>
       </header>
 
       <div class="room-shell">
         <section class="feed-panel" aria-labelledby="feed-title">
           <div class="panel-heading">
             <div>
-              <p class="eyebrow">CONTEÚDO DA SALA</p>
-              <h2 id="feed-title">Passagem</h2>
+              <p class="eyebrow" data-i18n="feed.eyebrow">CONTEÚDO DA SALA</p>
+              <h2 id="feed-title" data-i18n="feed.title">Passagem</h2>
             </div>
-            <span id="room-status" class="status-tag">ativa</span>
+            <span id="room-status" class="status-tag" data-i18n="status.active">ativa</span>
           </div>
 
           <div id="feed" class="feed" role="log" aria-live="polite" aria-relevant="additions">
             <div id="empty-feed" class="empty-feed">
               <div class="empty-mark" aria-hidden="true">↗</div>
-              <h3>A passagem está livre.</h3>
-              <p>Envie um texto em Markdown ou escolha alguns arquivos.</p>
+              <h3 data-i18n="empty.title">A passagem está livre.</h3>
+              <p data-i18n="empty.description">Envie um texto em Markdown ou escolha alguns arquivos.</p>
             </div>
           </div>
 
           <form id="message-form" class="composer">
-            <div class="markdown-tools" aria-label="Formatação Markdown">
-              <span>MARKDOWN</span>
-              <button type="button" data-wrap="**|**" title="Negrito"><b>B</b></button>
-              <button type="button" data-wrap="*|*" title="Itálico"><i>I</i></button>
-              <button type="button" data-wrap="`|`" title="Código">&lt;/&gt;</button>
-              <button type="button" data-wrap="[|](https://)" title="Link">↗ link</button>
+            <div class="markdown-tools" aria-label="Formatação Markdown" data-i18n-aria-label="markdown.label">
+              <span data-i18n="markdown.name">MARKDOWN</span>
+              <button type="button" data-wrap="**|**" title="Negrito" data-i18n-title="markdown.bold"><b>B</b></button>
+              <button type="button" data-wrap="*|*" title="Itálico" data-i18n-title="markdown.italic"><i>I</i></button>
+              <button type="button" data-wrap="`|`" title="Código" data-i18n-title="markdown.code">&lt;/&gt;</button>
+              <button type="button" data-wrap="[|](https://)" title="Link" data-i18n-title="markdown.link">↗ <span data-i18n="markdown.link">link</span></button>
             </div>
-            <label class="sr-only" for="message-input">Mensagem em Markdown</label>
-            <textarea id="message-input" maxlength="8000" rows="3" placeholder="Escreva algo para passar adiante…"></textarea>
+            <label class="sr-only" for="message-input" data-i18n="message.label">Mensagem em Markdown</label>
+            <textarea id="message-input" maxlength="8000" rows="3" placeholder="Escreva algo para passar adiante…" data-i18n-placeholder="message.placeholder"></textarea>
             <div class="composer-footer">
               <div class="composer-actions">
                 <input id="file-input" type="file" multiple hidden>
-                <button id="file-button" class="attach-button" type="button"><span aria-hidden="true">＋</span> Arquivos</button>
+                <button id="file-button" class="attach-button" type="button"><span aria-hidden="true">＋</span> <span data-i18n="file.button">Arquivos</span></button>
                 <span id="upload-status" class="upload-status" aria-live="polite"></span>
               </div>
               <div class="send-group">
-                <span class="shortcut-hint">Enter envia · Shift+Enter quebra</span>
+                <span class="shortcut-hint" data-i18n="shortcut">Enter envia · Shift+Enter quebra</span>
                 <span id="character-count">0 / 8000</span>
-                <button class="send-button" type="submit">Enviar <span aria-hidden="true">↑</span></button>
+                <button class="send-button" type="submit"><span data-i18n="send">Enviar</span> <span aria-hidden="true">↑</span></button>
               </div>
             </div>
           </form>
@@ -130,15 +144,15 @@
         <aside class="presence-panel" aria-labelledby="presence-title">
           <div class="presence-heading">
             <div>
-              <p class="eyebrow">AGORA</p>
-              <h2 id="presence-title">Na sala</h2>
+              <p class="eyebrow" data-i18n="presence.eyebrow">AGORA</p>
+              <h2 id="presence-title" data-i18n="presence.title">Na sala</h2>
             </div>
             <span id="participant-count" class="participant-count">0</span>
           </div>
           <ul id="participant-list" class="participant-list"></ul>
           <div class="presence-note">
             <span aria-hidden="true">⌁</span>
-            <p>Avatares e nomes duram somente enquanto esta sala existir.</p>
+            <p data-i18n="presence.note">Avatares e nomes duram somente enquanto esta sala existir.</p>
           </div>
         </aside>
       </div>
@@ -148,10 +162,10 @@
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <div id="ended-overlay" class="ended-overlay" hidden>
     <div>
-      <p class="eyebrow">PASSAGEM ENCERRADA</p>
-      <h2>Tudo foi apagado.</h2>
-      <p id="ended-reason">A sala não está mais disponível.</p>
-      <button id="back-home" class="primary-button" type="button">Voltar ao início</button>
+      <p class="eyebrow" data-i18n="ended.eyebrow">PASSAGEM ENCERRADA</p>
+      <h2 data-i18n="ended.title">Tudo foi apagado.</h2>
+      <p id="ended-reason" data-i18n="ended.unavailable">A sala não está mais disponível.</p>
+      <button id="back-home" class="primary-button" type="button" data-i18n="ended.back">Voltar ao início</button>
     </div>
   </div>
 </body>

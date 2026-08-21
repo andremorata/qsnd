@@ -1,5 +1,7 @@
 # Auditoria de segurança
 
+[Português do Brasil](SECURITY-AUDIT.md) · [English (US)](SECURITY-AUDIT.en-US.md)
+
 ## Escopo
 
 Revisão do fluxo completo de criação, entrada, mensagens, Markdown, presença, upload, armazenamento temporário, download, reconexão, encerramento e reinício. Foram inspecionados código do servidor e navegador, testes, dependências e requisitos do Azure Web App. Uma segunda revisão independente foi executada antes das correções.

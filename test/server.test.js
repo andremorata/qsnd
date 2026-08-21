@@ -46,6 +46,9 @@ test('serves the app and exchanges text and files only while the room exists', a
   assert.match(homeResponse.headers.get('content-security-policy'), new RegExp(`connect-src 'self' ws://127\\.0\\.0\\.1:${port}`));
   assert.doesNotMatch(homeResponse.headers.get('content-security-policy'), /connect-src 'self' ws: wss:/);
   assert.equal(homeResponse.headers.get('x-frame-options'), 'DENY');
+  const localeResponse = await fetch(`${origin}/i18n.js`);
+  assert.equal(localeResponse.status, 200);
+  assert.match(localeResponse.headers.get('content-type'), /^text\/javascript/);
 
   socket.send(JSON.stringify({ type: 'create', name: 'Ana', label: 'Teste' }));
   const authentication = await messages.next('authenticated');

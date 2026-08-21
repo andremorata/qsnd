@@ -1,5 +1,7 @@
 # Segurança e ciclo de vida dos dados
 
+[Português do Brasil](SECURITY.md) · [English (US)](SECURITY.en-US.md)
+
 O QSND foi desenhado para troca casual e temporária. Este documento define o que a aplicação garante, o que depende da implantação e o que ela não promete.
 
 ## Modelo de acesso
@@ -8,6 +10,7 @@ O QSND foi desenhado para troca casual e temporária. Este documento define o qu
 - Depois da entrada, o servidor emite um token aleatório de 192 bits para aquele participante.
 - Mensagens, presença, uploads e downloads exigem uma conexão autenticada e ativa.
 - O token fica apenas na memória do servidor e no `sessionStorage` daquela aba. Ele não aparece em URLs.
+- Idioma e tema podem ficar em `localStorage`; essas preferências não contêm código, token nem conteúdo da sala.
 - O servidor não lista salas e devolve a mesma resposta para sala inexistente, pausada ou token inválido.
 - Tentativas de conexão, criação, entrada, retomada, eventos e transferências são limitadas por endereço de origem.
 - WebSockets aceitam apenas a origem pública configurada e fecham conexões que não se autenticam em dez segundos.

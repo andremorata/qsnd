@@ -1,6 +1,10 @@
 # QSND
 
+[Português do Brasil](README.md) · [English (US)](README.en-US.md)
+
 Interface temporária para trocar textos e arquivos dentro de uma sala. Nada sobrevive ao encerramento da sala.
+
+[Aplicação ao vivo](https://qsnd-eqdpe8dpf4afdrad.southcentralus-01.azurewebsites.net)
 
 ## Objetivo do MVP
 
@@ -47,12 +51,15 @@ O código funciona como o segredo de acesso. Não há descoberta ou listagem pú
 - Ação exclusiva do dono para encerrar a sala imediatamente.
 - Aviso visível quando faltarem cinco minutos para expirar por inatividade.
 - Contagem regressiva para todos quando o dono estiver desconectado.
+- Interface em português do Brasil e inglês dos Estados Unidos, escolhida pelo idioma do navegador e com troca manual no cabeçalho.
+- Tema claro ou escuro, escolhido pela preferência do sistema e com troca manual no cabeçalho.
+- Cabeçalho e compositor sempre visíveis; somente o feed do chat rola verticalmente.
 
 ### Direção visual
 
-Uma “mesa de transferência” compacta: fundo claro e quente, superfícies com contraste nítido, tipografia editorial e uma cor de sinalização forte para ações e estados. Sem aparência de painel administrativo.
+Uma "mesa de transferência" compacta: superfícies com contraste nítido, tipografia editorial, tema claro ou escuro e uma cor de sinalização forte para ações e estados. Sem aparência de painel administrativo.
 
-No desktop, o feed ocupa o centro e a presença fica em uma coluna estreita. No celular, a presença vira uma gaveta e o compositor permanece acessível no rodapé. Movimento deve comunicar entrada, upload e expiração, sem animações decorativas excessivas.
+No desktop, o feed ocupa o centro e a presença fica em uma coluna estreita. No celular, a presença vira uma faixa horizontal e o compositor permanece acessível no rodapé. O documento não rola; a rolagem fica no feed. Movimento comunica entrada, upload e expiração, sem animações decorativas excessivas.
 
 ## Ciclo de vida
 
@@ -71,7 +78,7 @@ A sala é destruída quando ocorrer primeiro:
 
 Ações que renovam o prazo de inatividade: entrar, enviar texto, concluir upload e iniciar download. Heartbeats de conexão e uma aba apenas aberta não renovam o prazo.
 
-O navegador guarda o token de retomada do dono somente em `sessionStorage`. Assim, atualizar a página permite retomar a sala, mas o token não vira uma conta ou sessão permanente.
+O navegador guarda o token de retomada do dono somente em `sessionStorage`. Assim, atualizar a página permite retomar a sala, mas o token não vira uma conta ou sessão permanente. Idioma e tema ficam em `localStorage`; essas preferências não contêm dados da sala.
 
 Ao destruir uma sala, o servidor:
 
@@ -99,6 +106,7 @@ Navegador
 
 - Node.js com um único servidor HTTP.
 - HTML, CSS e JavaScript do navegador, sem framework ou etapa de build.
+- Dicionário local em `public/i18n.js` para português do Brasil e inglês dos Estados Unidos.
 - Duas dependências de runtime: `ws`, para WebSocket no servidor, e `markdown-it`, para renderização segura e consistente do Markdown no servidor.
 - `crypto`, `fs`, `http`, `path` e `node:test` da biblioteca padrão.
 - Upload transmitido diretamente para disco temporário, sem carregar o arquivo inteiro em memória.
@@ -221,6 +229,8 @@ Reinícios e trocas de instância encerram todas as salas por definição.
 - A sala é apagada por ação do dono, ausência do dono, inatividade ou reinício.
 - Depois da exclusão, códigos, tokens e URLs antigas não dão acesso a mensagens ou arquivos.
 - Nenhum dado funcional da sala é persistido ou incluído nos logs da aplicação.
+- O idioma inicial acompanha o navegador, o tema inicial acompanha o sistema e ambos podem ser trocados no cabeçalho.
+- Cabeçalho e compositor permanecem visíveis sem rolagem do documento em desktop e mobile.
 
 ## Fora do MVP
 
