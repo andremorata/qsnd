@@ -4,7 +4,7 @@
 
 A temporary interface for sharing text and files inside a room. Nothing survives after the room closes.
 
-[Live app](https://qsnd-eqdpe8dpf4afdrad.southcentralus-01.azurewebsites.net)
+[Live app](https://qsnd.pmr.dev)
 
 ## MVP goal
 

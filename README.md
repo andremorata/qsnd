@@ -4,7 +4,7 @@
 
 Interface temporária para trocar textos e arquivos dentro de uma sala. Nada sobrevive ao encerramento da sala.
 
-[Aplicação ao vivo](https://qsnd-eqdpe8dpf4afdrad.southcentralus-01.azurewebsites.net)
+[Aplicação ao vivo](https://qsnd.pmr.dev)
 
 ## Objetivo do MVP
 

@@ -271,6 +271,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, a:focus-visib
   text-transform: uppercase;
 }
 .promise-row > span + span { padding-left: 14px; border-left: 1px solid var(--line); }
+.legal-note { margin: 18px 0 0; font-size: .8125rem; line-height: 1.6; color: var(--muted); }
+.legal-note a { color: inherit; text-underline-offset: 3px; }
+.legal-note a:hover { color: var(--ink); }
 .promise-row b { color: var(--ink); font-size: 18px; }
 
 .access-card {
