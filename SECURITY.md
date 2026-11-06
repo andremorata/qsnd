@@ -79,27 +79,24 @@ Todas as respostas funcionais usam `Cache-Control: no-store`. A página também 
 
 Azure, proxy, WAF e ferramentas de observabilidade ainda podem produzir metadados operacionais como IP, horário, rota fixa, status e volume transferido. Não habilite captura de corpo ou cabeçalhos de autorização. Defina retenção mínima e acesso restrito para logs de infraestrutura.
 
-## Configuração obrigatória no Azure Web App
+## Configuração obrigatória no Azure Container Apps
 
-- Uma única instância e sem autoscale.
-- Basic B1 ou superior é recomendado. O F1 foi aceito para este MVP de baixo risco, assumindo cold start, recursos compartilhados e ausência de garantia operacional de produção.
-- **HTTPS Only** habilitado.
-- TLS mínimo 1.2 ou superior no site e no SCM/Kudu.
+- No máximo uma réplica (`--max-replicas 1`). Escala a zero é aceita: a réplica só é desligada sem requisições nem WebSockets abertos.
+- Ingress externo com tráfego HTTP inseguro desabilitado. O ambiente aceita somente TLS 1.2 ou superior.
 - `PUBLIC_ORIGIN=https://<host-público-exato>` configurado.
-- WebSockets habilitados quando a plataforma exigir essa opção.
-- Sem montagem persistente no diretório temporário.
-- Health check em `/health`.
-- FTP/FTPS e autenticação básica do SCM desabilitados quando não forem usados.
-- Logs HTTP, diagnóstico detalhado e Application Insights desabilitados ou configurados sem corpos, cabeçalhos e dados pessoais.
-- Acesso ao SCM/Kudu restrito aos responsáveis pela implantação.
+- `TRUST_PROXY=1`, já definido no `Dockerfile`, para usar o IP e o protocolo repassados pelo ingress.
+- Sem volume persistente no diretório temporário.
+- Imagem obtida do registro por identidade gerenciada com `AcrPull`, sem senha de registro.
+- Logs do console sem corpos, cabeçalhos e dados pessoais.
+- Telemetria opcional do Application Insights (`src/telemetry.js`): envia rota conhecida ou `/{other}`, status, duração, eventos da sala com contagens e bytes, e o IP para geolocalização. A ingestão grava o IP mascarado como `0.0.0.0`. Nunca envia código da sala, token, nomes, nomes de arquivo, query string ou conteúdo.
 
-Reinício, atualização, troca de slot ou mudança de instância encerram todas as salas. Isso é comportamento de segurança, não recuperação de desastre.
+Reinício, nova revisão, escala a zero ou troca de réplica encerram todas as salas. Isso é comportamento de segurança, não recuperação de desastre.
 
 Referências da plataforma:
 
-- [Segurança do Azure App Service](https://learn.microsoft.com/azure/app-service/overview-security)
-- [Armazenamento local e temporário](https://learn.microsoft.com/azure/app-service/operating-system-functionality)
-- [TLS mínimo no App Service](https://learn.microsoft.com/azure/app-service/tls-minimum-version)
+- [Ingress no Azure Container Apps](https://learn.microsoft.com/azure/container-apps/ingress-overview)
+- [Armazenamento no Azure Container Apps](https://learn.microsoft.com/azure/container-apps/storage-mounts)
+- [Escala no Azure Container Apps](https://learn.microsoft.com/azure/container-apps/scale-app)
 
 ## Riscos residuais
 

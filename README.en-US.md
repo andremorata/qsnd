@@ -14,7 +14,7 @@ The product has no accounts, database, history, search, moderation, or permanent
 
 ## Initial decisions
 
-- Primary hosting: **Azure Web App**, with one instance.
+- Primary hosting: **Azure Container Apps**, consumption plan, at most one replica, scale to zero.
 - Entry: **room code + name**.
 - Code: five uppercase letters, excluding visually ambiguous characters.
 - Room name: optional; the server always generates the code.
@@ -97,7 +97,7 @@ Browser
   └─ WebSocket: messages, presence, progress, and closure
                       │
                       ▼
-         Azure Web App — 1 Node.js process
+   Azure Container Apps — 1 Node.js process
            ├─ In-memory Map: rooms and participants
            └─ temporary directory: files
 ```
@@ -112,7 +112,7 @@ Browser
 - Uploads stream directly to temporary disk instead of loading the whole file into memory.
 - Each file is stored with AES-256-GCM and a random key held only in room memory.
 - Files use random internal IDs; the original name is display metadata only.
-- One Azure Web App instance. Horizontal scale is outside the MVP because state is local to the process.
+- At most one Azure Container Apps replica. Horizontal scale is outside the MVP because state is local to the process.
 
 Vercel is not the first target. Ephemeral functions would require separate real-time and file services, which conflicts with the small, non-persistent design.
 
@@ -178,13 +178,14 @@ npm start
 
 The app runs at `http://localhost:3000`; `GET /health` checks availability. Use `npm run dev` for automatic restart during development.
 
-On Azure Web App:
+On Azure Container Apps:
 
-- use Node.js 22 or newer; F1 supports the MVP with cold starts, while B1+ is recommended for predictable operation;
-- use `npm start` as the startup command;
-- enable HTTPS Only, TLS 1.2+ for both the site and SCM, and WebSockets;
+- publish the `Dockerfile` image (Node.js 24, port 8080, `TRUST_PROXY=1`), for example with `az acr build -r <registry> -t qsnd:<tag> --platform linux/amd64 .`;
+- use external ingress on port 8080 with insecure HTTP disabled;
 - set `PUBLIC_ORIGIN=https://<exact-public-host>`;
-- keep one instance;
+- use `--min-replicas 0 --max-replicas 1`; the first visit after an idle period has a cold start of a few seconds;
+- use 0.5 vCPU and 1 GiB, which give 2 GiB of temporary disk;
+- to measure usage, store the Application Insights connection string in a secret and expose it as `APPLICATIONINSIGHTS_CONNECTION_STRING`; without it, nothing is sent;
 - do not enable persistent storage for temporary files;
 - do not capture request bodies or sensitive headers in logs or telemetry.
 
@@ -214,7 +215,7 @@ Restarts and instance changes end every room by design.
 
 - Apply the responsive layout and error/progress states.
 - Validate keyboard, focus, contrast, and screen readers.
-- Deploy one Azure Web App instance with WebSockets enabled.
+- Deploy one Azure Container Apps replica.
 - Test with two browsers and confirm cleanup after each close path.
 
 ## MVP acceptance criteria

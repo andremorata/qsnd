@@ -14,7 +14,7 @@ O produto não terá contas, banco de dados, histórico, busca, moderação ou a
 
 ## Decisões iniciais
 
-- Hospedagem principal: **Azure Web App**, em uma única instância.
+- Hospedagem principal: **Azure Container Apps**, plano de consumo, no máximo uma réplica e escala a zero.
 - Entrada: **código da sala + nome**.
 - Código: cinco letras maiúsculas, sem caracteres visualmente ambíguos.
 - Nome da sala: opcional; o código é sempre gerado pelo servidor.
@@ -97,7 +97,7 @@ Navegador
   └─ WebSocket: mensagens, presença, progresso e encerramento
                       │
                       ▼
-         Azure Web App — 1 processo Node.js
+   Azure Container Apps — 1 processo Node.js
            ├─ Map em memória: salas e participantes
            └─ diretório temporário: arquivos
 ```
@@ -112,7 +112,7 @@ Navegador
 - Upload transmitido diretamente para disco temporário, sem carregar o arquivo inteiro em memória.
 - Cada arquivo é gravado com AES-256-GCM e uma chave aleatória mantida somente na memória da sala.
 - Arquivos identificados internamente por IDs aleatórios; o nome original é apenas metadado de exibição.
-- Uma única instância do Azure Web App. Escala horizontal não faz parte do MVP porque o estado é local ao processo.
+- No máximo uma réplica no Azure Container Apps. Escala horizontal não faz parte do MVP porque o estado é local ao processo.
 
 Vercel não é o alvo inicial: funções efêmeras exigiriam um serviço externo de tempo real e outro de arquivos, contrariando a proposta pequena e sem persistência.
 
@@ -178,13 +178,14 @@ npm start
 
 A aplicação estará em `http://localhost:3000`; `GET /health` verifica a disponibilidade. Para desenvolvimento com reinício automático, use `npm run dev`.
 
-No Azure Web App:
+No Azure Container Apps:
 
-- use o runtime Node.js 22 ou mais recente; o F1 atende ao MVP com cold start, enquanto B1+ é recomendado para operação previsível;
-- use `npm start` como comando de inicialização;
-- habilite HTTPS Only, TLS 1.2+ no site e no SCM e WebSockets;
+- publique a imagem do `Dockerfile` (Node.js 24, porta 8080, `TRUST_PROXY=1`), por exemplo com `az acr build -r <registro> -t qsnd:<tag> --platform linux/amd64 .`;
+- use ingress externo na porta 8080, sem tráfego HTTP inseguro;
 - configure `PUBLIC_ORIGIN=https://<host-público-exato>`;
-- mantenha somente uma instância;
+- use `--min-replicas 0 --max-replicas 1`; a primeira visita depois de um período ocioso tem cold start de alguns segundos;
+- use 0,5 vCPU e 1 GiB, que dão 2 GiB de disco temporário;
+- para medir uso, guarde a connection string do Application Insights em um secret e exponha como `APPLICATIONINSIGHTS_CONNECTION_STRING`; sem ela, nada é enviado;
 - não habilite armazenamento persistente para os arquivos temporários;
 - não capture corpos ou cabeçalhos sensíveis em logs e telemetria.
 
@@ -214,7 +215,7 @@ Reinícios e trocas de instância encerram todas as salas por definição.
 
 - Aplicar o layout responsivo e os estados de erro/progresso.
 - Validar teclado, foco, contraste e leitores de tela.
-- Implantar uma única instância no Azure Web App com WebSockets habilitados.
+- Implantar uma única réplica no Azure Container Apps.
 - Fazer um teste com dois navegadores e confirmar a limpeza após cada forma de encerramento.
 
 ## Critérios de aceite do MVP

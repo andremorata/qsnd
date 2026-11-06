@@ -79,27 +79,24 @@ All functional responses use `Cache-Control: no-store`. The page also sends a re
 
 Azure, a proxy, a WAF, or observability tools may still produce operational metadata such as IP address, time, fixed route, status, and transferred volume. Do not enable body or authorization-header capture. Keep infrastructure log retention short and access restricted.
 
-## Required Azure Web App configuration
+## Required Azure Container Apps configuration
 
-- One instance with no autoscale.
-- Basic B1 or higher is recommended. F1 was accepted for this low-risk MVP with cold starts, shared resources, and no production operational guarantee.
-- **HTTPS Only** enabled.
-- Minimum TLS 1.2 or newer for both the site and SCM/Kudu.
+- At most one replica (`--max-replicas 1`). Scale to zero is accepted: the replica stops only with no requests and no open WebSockets.
+- External ingress with insecure HTTP disabled. The environment accepts only TLS 1.2 or newer.
 - `PUBLIC_ORIGIN=https://<exact-public-host>` configured.
-- WebSockets enabled when the platform exposes that option.
-- No persistent mount for the temporary directory.
-- Health check at `/health`.
-- FTP/FTPS and SCM basic authentication disabled when unused.
-- HTTP logs, detailed diagnostics, and Application Insights disabled or configured without bodies, headers, and personal data.
-- SCM/Kudu access restricted to deployment operators.
+- `TRUST_PROXY=1`, already set in the `Dockerfile`, to use the client IP and protocol forwarded by ingress.
+- No persistent volume for the temporary directory.
+- Image pulled from the registry through a managed identity with `AcrPull`, with no registry password.
+- Console logs without bodies, headers, and personal data.
+- Optional Application Insights telemetry (`src/telemetry.js`): sends a known route or `/{other}`, status, duration, room events with counts and bytes, and the IP for geolocation. Ingestion stores the IP masked as `0.0.0.0`. It never sends room codes, tokens, names, file names, query strings, or content.
 
-A restart, update, slot swap, or instance change ends every room. This is a security behavior, not disaster recovery.
+A restart, new revision, scale to zero, or replica change ends every room. This is a security behavior, not disaster recovery.
 
 Platform references:
 
-- [Azure App Service security](https://learn.microsoft.com/azure/app-service/overview-security)
-- [Local and temporary storage](https://learn.microsoft.com/azure/app-service/operating-system-functionality)
-- [Minimum TLS in App Service](https://learn.microsoft.com/azure/app-service/tls-minimum-version)
+- [Ingress in Azure Container Apps](https://learn.microsoft.com/azure/container-apps/ingress-overview)
+- [Storage in Azure Container Apps](https://learn.microsoft.com/azure/container-apps/storage-mounts)
+- [Scaling in Azure Container Apps](https://learn.microsoft.com/azure/container-apps/scale-app)
 
 ## Residual risks
 

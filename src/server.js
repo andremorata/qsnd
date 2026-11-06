@@ -8,6 +8,7 @@ import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 import { WebSocket, WebSocketServer } from 'ws';
 import { AppError, RoomStore } from './room-store.js';
+import { stopTelemetry, telemetryEnabled, trackEvent, trackRequest } from './telemetry.js';
 
 const PORT = Number(process.env.PORT) || 3000;
 const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN?.replace(/\/$/, '') || null;
@@ -42,7 +43,9 @@ const sessionBySocket = new WeakMap();
 const activeTransfers = new Map();
 const pendingDeletions = new Set();
 const rateLimits = new Map();
+const KNOWN_PATHS = new Set([...ASSETS.keys(), '/health', '/api/files', '/api/files/download']);
 const server = createServer((request, response) => {
+  if (telemetryEnabled) observeRequest(request, response);
   handleRequest(request, response).catch((error) => sendHttpError(response, error));
 });
 const webSockets = new WebSocketServer({ noServer: true, maxPayload: 64 * 1024 });
@@ -85,7 +88,8 @@ webSockets.on('connection', (socket, request) => {
 
 store.on('owner-away', ({ code }) => abortRoomTransfers(code));
 
-store.on('destroy', ({ code, reason }) => {
+store.on('destroy', ({ code, reason, stats }) => {
+  trackEvent('room_destroyed', stats, { reason });
   abortRoomTransfers(code);
 
   const roomSockets = socketsByRoom.get(code);
@@ -200,6 +204,7 @@ async function uploadFile(request, response, code) {
       authenticationTag: cipher.getAuthTag(),
     });
     keyTransferred = true;
+    trackEvent('file_uploaded', { bytes: size }, {}, clientAddress(request));
     broadcast(code, { type: 'entry', entry, room: store.summary(code) });
     sendJson(response, 201, { entry });
   } catch (error) {
@@ -237,6 +242,7 @@ async function downloadFile(request, response, code, requestedFileId) {
       'Content-Type': 'application/octet-stream',
     });
     broadcast(code, { type: 'room-state', room: store.summary(code) });
+    trackEvent('file_downloaded', { bytes: file.size }, {}, clientAddress(request));
     await pipeline(createReadStream(file.storedPath), decipher, response, { signal: transfer.signal });
   } catch (error) {
     if (response.headersSent) {
@@ -262,6 +268,7 @@ function handleSocketMessage(socket, raw) {
     if (message.type === 'message') {
       const entry = store.addMessage(session.code, session.token, message.markdown);
       broadcast(session.code, { type: 'entry', entry, room: store.summary(session.code) });
+      trackEvent('message_sent', {}, {}, socket.clientAddress);
       return;
     }
 
@@ -312,6 +319,7 @@ function authenticateSocket(socket, message) {
   }
 
   associateSocket(socket, authentication.code, authentication.token);
+  trackEvent(`room_${message.type}`, {}, { role: authentication.role }, socket.clientAddress);
   sendSocket(socket, {
     type: 'authenticated',
     code: authentication.code,
@@ -556,6 +564,22 @@ async function stop() {
   await new Promise((resolve) => server.close(resolve));
   await Promise.allSettled([...pendingDeletions]);
   await rm(TEMP_ROOT, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  await stopTelemetry();
+}
+
+function observeRequest(request, response) {
+  const startedAt = performance.now();
+  response.once('close', () => {
+    const { pathname } = new URL(request.url, 'http://localhost');
+    trackRequest({
+      method: request.method,
+      // Unknown paths are scanner noise and may carry arbitrary text.
+      path: KNOWN_PATHS.has(pathname) ? pathname : '/{other}',
+      status: response.statusCode,
+      durationMs: performance.now() - startedAt,
+      clientIp: clientAddress(request),
+    });
+  });
 }
 
 for (const signal of ['SIGINT', 'SIGTERM']) {

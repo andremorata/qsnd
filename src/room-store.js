@@ -311,7 +311,13 @@ export class RoomStore extends EventEmitter {
     }
 
     this.rooms.delete(normalizedCode);
-    this.emit('destroy', { code: normalizedCode, reason, files });
+    const stats = {
+      lifetimeMs: this.now() - room.createdAt,
+      participants: room.participants.size,
+      messages: room.timeline.length - fileEntries.length,
+      files: fileEntries.length,
+    };
+    this.emit('destroy', { code: normalizedCode, reason, files, stats });
     return true;
   }
 
