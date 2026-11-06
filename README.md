@@ -180,6 +180,7 @@ A aplicação estará em `http://localhost:3000`; `GET /health` verifica a dispo
 
 No Azure Container Apps:
 
+- cada push na `main` roda `.github/workflows/deploy.yml`: testes, imagem `ghcr.io/andremorata/qsnd:<commit>` e atualização do app `qsnd` em `rg-qsnd-prod`; o login no Azure usa OIDC com a identidade `qsnd-deploy-id`, sem segredo guardado no GitHub;
 - publique a imagem do `Dockerfile` (Node.js 24, porta 8080, `TRUST_PROXY=1`), publicada como pacote público em `ghcr.io/andremorata/qsnd` com `docker buildx build --platform linux/amd64 -t ghcr.io/andremorata/qsnd:<commit> --push .`;
 - use ingress externo na porta 8080, sem tráfego HTTP inseguro;
 - configure `PUBLIC_ORIGIN=https://<host-público-exato>`;
