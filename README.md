@@ -180,7 +180,7 @@ A aplicação estará em `http://localhost:3000`; `GET /health` verifica a dispo
 
 No Azure Container Apps:
 
-- publique a imagem do `Dockerfile` (Node.js 24, porta 8080, `TRUST_PROXY=1`), por exemplo com `az acr build -r <registro> -t qsnd:<tag> --platform linux/amd64 .`;
+- publique a imagem do `Dockerfile` (Node.js 24, porta 8080, `TRUST_PROXY=1`), publicada como pacote público em `ghcr.io/andremorata/qsnd` com `docker buildx build --platform linux/amd64 -t ghcr.io/andremorata/qsnd:<commit> --push .`;
 - use ingress externo na porta 8080, sem tráfego HTTP inseguro;
 - configure `PUBLIC_ORIGIN=https://<host-público-exato>`;
 - use `--min-replicas 0 --max-replicas 1`; a primeira visita depois de um período ocioso tem cold start de alguns segundos;

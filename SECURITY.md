@@ -86,7 +86,7 @@ Azure, proxy, WAF e ferramentas de observabilidade ainda podem produzir metadado
 - `PUBLIC_ORIGIN=https://<host-público-exato>` configurado.
 - `TRUST_PROXY=1`, já definido no `Dockerfile`, para usar o IP e o protocolo repassados pelo ingress.
 - Sem volume persistente no diretório temporário.
-- Imagem obtida do registro por identidade gerenciada com `AcrPull`, sem senha de registro.
+- Imagem pública em `ghcr.io/andremorata/qsnd`, sem credencial de registro no app.
 - Logs do console sem corpos, cabeçalhos e dados pessoais.
 - Telemetria opcional do Application Insights (`src/telemetry.js`): envia rota conhecida ou `/{other}`, status, duração, eventos da sala com contagens e bytes, e o IP para geolocalização. A ingestão grava o IP mascarado como `0.0.0.0`. Nunca envia código da sala, token, nomes, nomes de arquivo, query string ou conteúdo.
 

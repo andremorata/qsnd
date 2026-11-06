@@ -1,4 +1,5 @@
 FROM node:24-alpine
+LABEL org.opencontainers.image.source=https://github.com/andremorata/qsnd
 WORKDIR /app
 ENV NODE_ENV=production PORT=8080 TRUST_PROXY=1
 COPY package.json package-lock.json ./

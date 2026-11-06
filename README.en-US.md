@@ -180,7 +180,7 @@ The app runs at `http://localhost:3000`; `GET /health` checks availability. Use 
 
 On Azure Container Apps:
 
-- publish the `Dockerfile` image (Node.js 24, port 8080, `TRUST_PROXY=1`), for example with `az acr build -r <registry> -t qsnd:<tag> --platform linux/amd64 .`;
+- publish the `Dockerfile` image (Node.js 24, port 8080, `TRUST_PROXY=1`), published as a public package at `ghcr.io/andremorata/qsnd` with `docker buildx build --platform linux/amd64 -t ghcr.io/andremorata/qsnd:<commit> --push .`;
 - use external ingress on port 8080 with insecure HTTP disabled;
 - set `PUBLIC_ORIGIN=https://<exact-public-host>`;
 - use `--min-replicas 0 --max-replicas 1`; the first visit after an idle period has a cold start of a few seconds;

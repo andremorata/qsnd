@@ -86,7 +86,7 @@ Azure, a proxy, a WAF, or observability tools may still produce operational meta
 - `PUBLIC_ORIGIN=https://<exact-public-host>` configured.
 - `TRUST_PROXY=1`, already set in the `Dockerfile`, to use the client IP and protocol forwarded by ingress.
 - No persistent volume for the temporary directory.
-- Image pulled from the registry through a managed identity with `AcrPull`, with no registry password.
+- Public image at `ghcr.io/andremorata/qsnd`, with no registry credential in the app.
 - Console logs without bodies, headers, and personal data.
 - Optional Application Insights telemetry (`src/telemetry.js`): sends a known route or `/{other}`, status, duration, room events with counts and bytes, and the IP for geolocation. Ingestion stores the IP masked as `0.0.0.0`. It never sends room codes, tokens, names, file names, query strings, or content.
 
